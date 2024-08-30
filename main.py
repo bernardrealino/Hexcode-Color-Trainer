@@ -41,6 +41,14 @@ def on_submit_color(e):
     color_box.controls[1].bgcolor = second_color
     color_box.update()
     
+def input_check(e):
+    # Limit input to 6 characters and only allow 0-9, a-f
+    if len(e.control.value) > 6 or not all(c in '0123456789abcdef' for c in e.control.value.lower()):
+        e.control.error_text = "Input must be up to 6 characters and contain only 0-9, a-f"
+        e.control.update()
+    else:
+        e.control.error_text = None
+        e.control.update()
 
 def main(page: ft.Page):
     global title, color_box, color_input, submit_button, page_main, score_text
@@ -54,7 +62,7 @@ def main(page: ft.Page):
                     ft.Container(height=100, width=100, bgcolor=generate_random_color(), border_radius=20),
                     ft.Container(height=100, width=100, bgcolor="#ababab", border_radius=20)
                 ])
-    color_input = ft.TextField(label="Input Color HEX", border=ft.InputBorder.NONE, bgcolor="#eeeeee", border_radius=20)
+    color_input = ft.TextField(label="Input Color HEX", border=ft.InputBorder.NONE, bgcolor="#eeeeee", border_radius=20, max_length=6, on_change=input_check)
     submit_button = ft.ElevatedButton("Submit", on_click=on_submit_color)
     score_text = ft.Text(size=24)
 
@@ -66,9 +74,7 @@ def main(page: ft.Page):
             color_box,
             score_text,
             ft.Column([color_input, submit_button]),
-        ],
-        horizontal_alignment=ft.MainAxisAlignment.CENTER
-    )   
+        ])   
     )  
     page.controls.append(page_main)
     page.update()
